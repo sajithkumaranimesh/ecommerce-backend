@@ -1,21 +1,20 @@
-const { text } = require("express");
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const nodemailer = require('nodemailer');
 const secretKey = "nimesh-secret-key";
 
-const registerUser = async ({ username, password }) => {
+const registerUser = async ({ email, password }) => {
   try {
-    await new User({ username, password }).save();
+    await new User({ email, password }).save();
     return { success: true, message: "user registered successfully!" };
   } catch (error) {
     throw new Error("user registration faild!");
   }
 };
 
-const loginUser = async ({ username, password }) => {
+const loginUser = async ({ email, password }) => {
   try {
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ email });
     if (!user) {
       throw new Error("user not found with this username!");
     }
@@ -33,7 +32,7 @@ const loginUser = async ({ username, password }) => {
 };
 
 const forgotPassword = async ({ email }) => {
-  const user = await User.findOne({ username: email });
+  const user = await User.findOne({ email: email });
   if (!user) {
     throw new Error("user not found with this email!");
   }

@@ -5,9 +5,13 @@ const crypto = require("crypto");
 const { type } = require("os");
 
 const UserSchema = new Schema({
-  username: {
+  name:{
     type: String,
-    required: [true, "Username is required!"],
+    required: [true, "Name is required!"]
+  },
+  email: {
+    type: String,
+    required: [true, "Email address is required!"],
   },
   password: {
     type: String,
