@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const jwt = require('jsonwebtoken');
+// const crypto = require('crypto');
 const secretKey = "nimesh-secret-key";
 
 const registerUser = async ({ username, password}) => {
@@ -29,6 +30,18 @@ const loginUser = async ({username, password}) => {
         throw new Error("Authentication failed!");
     }
 };
+
+
+const forgotPassword = async ({ email }) => {
+    const user = await User.findOne({ username: email });
+    if(!user){
+        throw new Error("user not found with this email!");
+    }
+
+    // const token = crypto.randomBytes(20).toString('hex');
+
+
+}
 
 
 module.exports = {registerUser, loginUser};
