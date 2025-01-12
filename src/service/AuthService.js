@@ -2,7 +2,8 @@ const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const secretKey = "nimesh-secret-key";
-const sendEmail = require('../utils/email');
+const sendEmail = require("../utils/email");
+const crypto = require("crypto");
 
 const registerUser = async ({ name, email, password, passwordConfirm }) => {
   try {
@@ -36,13 +37,12 @@ const loginUser = async ({ email, password }) => {
 };
 
 const forgotPassword = async (email, protocol, host) => {
-  
-    const user = await User.findOne({email: email});
-    console.log(user)
-    if (!user) {
-      throw new Error("user not found with this email!");
-    }
-    try {
+  const user = await User.findOne({ email: email });
+  console.log(user);
+  if (!user) {
+    throw new Error("user not found with this email!");
+  }
+  try {
     const resetToken = await user.createPasswordResetToken();
     await user.save({ validateBeforeSave: false });
 
@@ -54,16 +54,43 @@ const forgotPassword = async (email, protocol, host) => {
       email: user.email,
       subject: "Your password reset token valid for (10 minutes)",
       message,
-    })
-    return {success: true, message: "Token sent to email!"};
-
+    });
+    return { success: true, message: "Token sent to email!" };
   } catch (error) {
     user.passwordResetToken = undefined;
     user.passwordResetTokenExpires = undefined;
-    await user.save({validateBeforeSave: false});
+    await user.save({ validateBeforeSave: false });
 
-    throw new Error("can't sending email. try again leter!")
+    throw new Error("can't sending email. try again leter!");
   }
 };
 
-module.exports = { registerUser, loginUser, forgotPassword };
+const resetPassword = async (resetToken, password, passwordConfirm) => {
+  try {
+    const hashedToken = crypto
+      .createHash("sha256")
+      .update(resetToken)
+      .digest("hex");
+
+    const user = await User.findOne({
+      passwordResetToken: hashedToken,
+      passwordResetTokenExpires: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      throw new Error("Token is invalid or has expired");
+    }
+
+    user.password = password;
+    user.passwordConfirm = passwordConfirm;
+    user.passwordResetToken = undefined;
+    user.passwordResetTokenExpires = undefined;
+
+    await user.save();
+    return { success: true, message: "Password reset successful!" };
+  } catch (error) {
+    throw new Error("can't reset password!");
+  }
+};
+
+module.exports = { registerUser, loginUser, forgotPassword, resetPassword };
