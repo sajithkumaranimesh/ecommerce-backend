@@ -12,6 +12,7 @@ const registerUser = async ({name, email, password }) => {
   }
 };
 
+
 const loginUser = async ({ email, password }) => {
   try {
     const user = await User.findOne({ email });
@@ -30,6 +31,7 @@ const loginUser = async ({ email, password }) => {
     throw new Error("Authentication failed!");
   }
 };
+
 
 const forgotPassword = async ({ email }) => {
   const user = await User.findOne({ email: email });
