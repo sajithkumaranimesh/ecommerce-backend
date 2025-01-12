@@ -15,12 +15,13 @@ const registerUser = async ({name, email, password, passwordConfirm }) => {
 
 const loginUser = async ({ email, password }) => {
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email: email}).select('+password');
     if (!user) {
       throw new Error("user not found with this username!");
     }
 
     const isPasswordValid = await user.comparePassword(password);
+    console.log(isPasswordValid);
     if (!isPasswordValid) {
       throw new Error("invalid password!");
     }
