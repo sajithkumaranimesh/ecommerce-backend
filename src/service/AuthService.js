@@ -3,9 +3,9 @@ const jwt = require("jsonwebtoken");
 const nodemailer = require('nodemailer');
 const secretKey = "nimesh-secret-key";
 
-const registerUser = async ({ email, password }) => {
+const registerUser = async ({name, email, password }) => {
   try {
-    await new User({ email, password }).save();
+    await new User({name, email, password }).save();
     return { success: true, message: "user registered successfully!" };
   } catch (error) {
     throw new Error("user registration faild!");
