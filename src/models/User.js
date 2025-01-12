@@ -21,16 +21,6 @@ const UserSchema = new Schema({
     required: [true, "Password is required!"],
     select: false
   },
-  passwordConfirm: {
-    type: String,
-    required: [true, "Please confirm your password!"],
-    validate: {
-      validator: function (el) {
-        return el === this.password;
-      },
-      message: "Password are not the same"
-    }
-  },
   passwordResetToken: {
     type: String,
   },
