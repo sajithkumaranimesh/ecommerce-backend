@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const validator = require('validator');
 
+
 const UserSchema = new Schema({
   name:{
     type: String,
@@ -13,11 +14,22 @@ const UserSchema = new Schema({
     type: String,
     required: [true, "Email address is required!"],
     unique: true,
-    validate: [validator.isEmail, "Please provide a valid email"],
+    validate: [validator.isEmail, "Please provide a valid email!"],
   },
   password: {
     type: String,
     required: [true, "Password is required!"],
+    select: false
+  },
+  passwordConfirm: {
+    type: String,
+    required: [true, "Please confirm your password!"],
+    validate: {
+      validator: function (el) {
+        return el === this.password;
+      },
+      message: "Password are not the same"
+    }
   },
   passwordResetToken: {
     type: String,
