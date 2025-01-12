@@ -21,4 +21,11 @@ const loginUser = async (req, res) => {
     }
 };
 
+const forgotPassword = async (req, res) => {
+    try{
+        const { email } = req.body;
+        const result = await authService.forgotPassword({email});
+    }catch(error){}
+}
+
 module.exports = {registerUser, loginUser};
