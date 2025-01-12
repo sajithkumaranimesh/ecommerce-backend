@@ -3,8 +3,8 @@ const dotenv = require('dotenv');
 dotenv.config({path: "./config.env"})
 const app = require('./app');
 
-const PORT = process.env.PORT;
 const DB = process.env.DATABASE_LOCAL;
+const PORT = process.env.PORT || 8000;
 
 async function main(){
     await mongoose.connect(DB)

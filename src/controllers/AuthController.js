@@ -15,7 +15,7 @@ const loginUser = async (req, res) => {
     try{
         const { email, password} = req.body;
         const result = await authService.loginUser({email, password});
-        res.json(result);
+        res.status(200).json(result);
     }catch(error){
         res.status(401).json({error: error.message});
     }
@@ -23,9 +23,14 @@ const loginUser = async (req, res) => {
 
 const forgotPassword = async (req, res) => {
     try{
-        const { email } = req.body;
-        const result = await authService.forgotPassword({email});
-    }catch(error){}
+        const {email} = req.body;
+        const protocol = req.protocol;
+        const host = req.get('host');
+        const result = await authService.forgotPassword(email, protocol, host);
+        res.status(200).json(result);
+    }catch(error){
+        res.status(500).json({ error: error.message})
+    }
 }
 
-module.exports = {registerUser, loginUser};
+module.exports = {registerUser, loginUser, forgotPassword};
