@@ -1,6 +1,5 @@
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
-const secretKey = "nimesh-secret-key";
 const sendEmail = require("../utils/email");
 const crypto = require("crypto");
 
