@@ -46,7 +46,7 @@ const forgotPassword = async (email, protocol, host) => {
     const resetToken = await user.createPasswordResetToken();
     await user.save({ validateBeforeSave: false });
 
-    const resetUrl = `${protocol}://${host}/api/v1/reset-password/${resetToken}`;
+    const resetUrl = `${protocol}://${host}/api/v1/auth/reset-password/${resetToken}`;
 
     const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetUrl}`;
 
@@ -67,6 +67,11 @@ const forgotPassword = async (email, protocol, host) => {
 
 const resetPassword = async (resetToken, password, passwordConfirm) => {
   try {
+
+    if (password !== passwordConfirm) {
+      throw new Error("Passwords do not match");
+    }
+
     const hashedToken = crypto
       .createHash("sha256")
       .update(resetToken)
