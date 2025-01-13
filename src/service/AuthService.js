@@ -1,14 +1,23 @@
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
-const nodemailer = require("nodemailer");
 const secretKey = "nimesh-secret-key";
 const sendEmail = require("../utils/email");
 const crypto = require("crypto");
 
+const generateToken = (id) => {
+  return jwt.sign({id}, process.env.JWT_SERET, {expiresIn: process.env.JWT_EXPIRES_IN});
+}
+
 const registerUser = async ({ name, email, password, passwordConfirm }) => {
   try {
-    await new User({ name, email, password, passwordConfirm }).save();
-    return { success: true, message: "user registered successfully!" };
+    const newUser = await User.create({
+      name: name,
+      email: email,
+      password: password,
+      passwordConfirm: passwordConfirm,
+    });
+    const token = generateToken(newUser._id);
+    return { success: true, message: "Registration successful!", token };
   } catch (error) {
     throw new Error("user registration faild!");
   }
@@ -27,10 +36,8 @@ const loginUser = async ({ email, password }) => {
       throw new Error("invalid password!");
     }
 
-    const token = jwt.sign({ userId: user._id }, secretKey, {
-      expiresIn: "5d",
-    });
-    return { success: true, token };
+    const token = generateToken(user._id);
+    return { success: true, message: "login successful!", token };
   } catch (error) {
     throw new Error("Authentication failed!");
   }
@@ -92,7 +99,10 @@ const resetPassword = async (resetToken, password, passwordConfirm) => {
     user.passwordResetTokenExpires = undefined;
 
     await user.save();
-    return { success: true, message: "Password reset successful!" };
+
+    const token = generateToken(user._id);
+    
+    return { success: true, message: "Password reset successful!",token };
   } catch (error) {
     throw new Error("can't reset password!");
   }
