@@ -20,6 +20,33 @@ const retrieveAll = async () => {
         const categoryList = await Category.find();
         return { success: true, message: "retrieve category successful!", categoryList};
     }catch(error){
-        throw new Error("ca")
+        throw new Error("category retrieve faild!");
+    }
+}
+
+const retrieveById = async (id) => {
+    try{
+        const category = await Category.findById(id);
+        return { success: true, message: "retrieve by id successfull!", category};
+    }catch(error){
+        throw new Error("retrieve by id faild!");
+    }
+}
+
+const deleteById = async (id) => {
+    try{
+        const deletedCategory = await Category.findByIdAndDelete(id);
+        return { success: true, message: "delete by id successfull!", deletedCategory};
+    }catch(error){
+        throw new Error("delete by id faild!");
+    }
+}
+
+const updateById = async (id) => {
+    try{
+        const updatedCategory = await Category.findByIdAndUpdate(id, category);
+        return { success: true, message: "update successfull!", updatedCategory};
+    }catch(error){
+        throw new Error("update by id faild!");
     }
 }
