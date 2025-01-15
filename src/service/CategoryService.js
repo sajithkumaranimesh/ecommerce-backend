@@ -12,7 +12,7 @@ const persist = async ({ name, description, imageUrl }) => {
         await category.save();
         return { success: true, message: "Category successfully created!" };
     } catch (error) {
-        throw new Error("Failed to create category.");
+        return { success: false, message: "Failed to create category."};
     }
 };
 
@@ -21,7 +21,7 @@ const retrieveAll = async () => {
         const categoryList = await Category.find();
         return { success: true, message: "Categories successfully retrieved!", data: categoryList };
     } catch (error) {
-        throw new Error("Failed to retrieve categories.");
+        return { success: false, message: "Failed to retrieve categories."};
     }
 };
 
@@ -30,11 +30,11 @@ const retrieveById = async (id) => {
     try {
         const category = await Category.findById(id);
         if (!category) {
-            throw new Error("Category not found.");
+            return { success: false, message: "Category not found."};
         }
         return { success: true, message: "Category successfully retrieved!", data: category };
     } catch (error) {
-        throw new Error("Failed to retrieve category by id.");
+        return { success: false, message: "Failed to retrieve category by id."};
     }
 };
 
@@ -43,11 +43,11 @@ const deleteById = async (id) => {
     try {
         const deletedCategory = await Category.findByIdAndDelete(id);
         if (!deletedCategory) {
-            throw new Error("Category not found.");
+            return { success: false, message: "Category not found."};
         }
         return { success: true, message: "Category successfully deleted!", data: deletedCategory };
     } catch (error) {
-        throw new Error("Failed to delete category by id.");
+        return { success: false, message: "Failed to delete category by id."};
     }
 };
 
@@ -65,11 +65,11 @@ const updateById = async (id, { name, description, imageUrl }) => {
             { new: true }
         );
         if (!updatedCategory) {
-            throw new Error("Category not found.");
+            return { success: false, message: "Category not found."};
         }
         return { success: true, message: "Category successfully updated!", data: updatedCategory };
     } catch (error) {
-        throw new Error("Failed to update category by ID.");
+        return { success: false, message: "Failed to update category by id."};
     }
 };
 
