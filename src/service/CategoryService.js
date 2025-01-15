@@ -1,52 +1,83 @@
 const Category = require("../models/Category");
 
-const persist = async ({ name, description, imageUrl, }) => {
-    try{
-        await Category({
-            name: name,
-            description: description,
+const persist = async ({ name, description, imageUrl }) => {
+    try {
+        const category = new Category({
+            name,
+            description,
             image_url: imageUrl,
             created_at: Date.now(),
-            update_at: Date.now(),
-        }).save();
-        return { success: true, message: "category persist successful!"};
-    }catch(error){
-        throw new Error("category persist faild!");
+            updated_at: Date.now(),
+        });
+        await category.save();
+        return { success: true, message: "Category successfully created!" };
+    } catch (error) {
+        throw new Error("Failed to create category.");
     }
-}
+};
 
 const retrieveAll = async () => {
-    try{
+    try {
         const categoryList = await Category.find();
-        return { success: true, message: "retrieve category successful!", categoryList};
-    }catch(error){
-        throw new Error("category retrieve faild!");
+        return { success: true, message: "Categories successfully retrieved!", data: categoryList };
+    } catch (error) {
+        throw new Error("Failed to retrieve categories.");
     }
-}
+};
+
 
 const retrieveById = async (id) => {
-    try{
+    try {
         const category = await Category.findById(id);
-        return { success: true, message: "retrieve by id successfull!", category};
-    }catch(error){
-        throw new Error("retrieve by id faild!");
+        if (!category) {
+            throw new Error("Category not found.");
+        }
+        return { success: true, message: "Category successfully retrieved!", data: category };
+    } catch (error) {
+        throw new Error("Failed to retrieve category by id.");
     }
-}
+};
+
 
 const deleteById = async (id) => {
-    try{
+    try {
         const deletedCategory = await Category.findByIdAndDelete(id);
-        return { success: true, message: "delete by id successfull!", deletedCategory};
-    }catch(error){
-        throw new Error("delete by id faild!");
+        if (!deletedCategory) {
+            throw new Error("Category not found.");
+        }
+        return { success: true, message: "Category successfully deleted!", data: deletedCategory };
+    } catch (error) {
+        throw new Error("Failed to delete category by id.");
     }
-}
+};
 
-const updateById = async (id) => {
-    try{
-        const updatedCategory = await Category.findByIdAndUpdate(id, category);
-        return { success: true, message: "update successfull!", updatedCategory};
-    }catch(error){
-        throw new Error("update by id faild!");
+
+const updateById = async (id, { name, description, imageUrl }) => {
+    try {
+        const updatedCategory = await Category.findByIdAndUpdate(
+            id,
+            {
+                name,
+                description,
+                image_url: imageUrl,
+                updated_at: Date.now(),
+            },
+            { new: true }
+        );
+        if (!updatedCategory) {
+            throw new Error("Category not found.");
+        }
+        return { success: true, message: "Category successfully updated!", data: updatedCategory };
+    } catch (error) {
+        throw new Error("Failed to update category by ID.");
     }
-}
+};
+
+
+module.exports = {
+    persist,
+    retrieveAll,
+    retrieveById,
+    deleteById,
+    updateById,
+};
