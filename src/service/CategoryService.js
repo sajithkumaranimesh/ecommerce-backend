@@ -73,7 +73,7 @@ const updateById = async (id, { name, description, imageUrl }) => {
     }
 };
 
-// Exporting the service functions
+
 module.exports = {
     persist,
     retrieveAll,
