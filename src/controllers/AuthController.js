@@ -6,7 +6,7 @@ const registerUser = async (req, res) => {
         const result = await authService.registerUser({name ,email, password, passwordConfirm});
         res.status(201).json(result);
     }catch(error){
-        res.status(500).json({error: error.message});
+        res.status(500).json({ success: false, message: error.message });
     }
 };
 
@@ -17,7 +17,7 @@ const loginUser = async (req, res) => {
         const result = await authService.loginUser({email, password});
         res.status(200).json(result);
     }catch(error){
-        res.status(401).json({error: error.message});
+        res.status(401).json({ success: false, message: error.message });
     }
 };
 
@@ -29,7 +29,7 @@ const forgotPassword = async (req, res) => {
         const result = await authService.forgotPassword(email, protocol, host);
         res.status(200).json(result);
     }catch(error){
-        res.status(500).json({ error: error.message})
+        res.status(500).json({ success: false, message: error.message });
     }
 }
 
@@ -40,7 +40,7 @@ const resetPassword = async (req, res) => {
         const result = await authService.resetPassword(resetToken, password, passwordConfirm);
         res.status(201).json(result);
     }catch(error){
-        res.status(500).json({error: error.message});
+        res.status(500).json({ success: false, message: error.message });
     }
 }
 
