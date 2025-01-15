@@ -47,7 +47,7 @@ const deleteById = async (req, res) => {
 const updateById = async (req, res) => {
     try{
         const { id } = req.params;
-        const { name, description, imageUrl } = req.params;
+        const { name, description, imageUrl } = req.body;
         const result = await categoryService.updateById(id, { name, description, imageUrl });
         res.status(200).json(result);
     }catch(error){
