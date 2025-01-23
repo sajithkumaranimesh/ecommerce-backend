@@ -1,35 +1,16 @@
 const stripe = require('stripe')('sk_test_51Qi77VDSOdB84Ar5WYOs92YdN2geHGbtt8DPjl6UuJgPiDvAcJ0yvbaGm9qIWpbZs5sLXTl44XCOwIkBPy6ffxkN00RRw5wZwi');
-
+const orderService = require('../service/OrderService');
 
 
 const createOrder = async (req, res) => {
-    console.log(req.body.cartItems);
-
     try{
-        const lineItems = req.body.cartItems.map(item => ({
-            price_data: {
-                currency: 'usd',
-                product_data: {
-                    name: item.name,
-                    images: [item.imageUrl],
-                },
-                unit_amount: item.price * 100,
-            },
-            quantity: item.quantity,
-        }));
-        
+        const { cartItems } = req.body;
+        const result = await orderService.createOrder( cartItems );
 
-        const session = await stripe.checkout.sessions.create({
-            payment_method_types: ['card'],
-            line_items: lineItems,
-            mode: 'payment',
-            success_url: 'http://localhost:3000/success',
-            cancel_url: 'http://localhost:3000/cancel',
-        })
-
-        console.log(session);
-        res.status(200).json(session);
-    }catch(error){}
+        res.status(201).json(result);
+    }catch(error){
+        res.status(500).json({ success: false, message: error.message });
+    }
 }
 
 module.exports = { createOrder }
