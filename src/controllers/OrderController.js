@@ -1,8 +1,5 @@
-const express = require('express');
-const app = express();
 const stripe = require('stripe')('sk_test_51Qi77VDSOdB84Ar5WYOs92YdN2geHGbtt8DPjl6UuJgPiDvAcJ0yvbaGm9qIWpbZs5sLXTl44XCOwIkBPy6ffxkN00RRw5wZwi');
 
-app.use(express.json());
 
 
 const createOrder = async (req, res) => {
@@ -14,11 +11,11 @@ const createOrder = async (req, res) => {
                 currency: 'usd',
                 product_data: {
                     name: item.name,
-                    images: [item.imageUrl], // Ensure the URL is valid
+                    images: [item.imageUrl],
                 },
-                unit_amount: item.price * 100, // Convert price to cents
+                unit_amount: item.price * 100,
             },
-            quantity: item.quantity, // Correctly specify the quantity
+            quantity: item.quantity,
         }));
         
 
@@ -27,7 +24,7 @@ const createOrder = async (req, res) => {
             line_items: lineItems,
             mode: 'payment',
             success_url: 'http://localhost:3000/success',
-            cancel_url: 'http://localhost:3000/success',
+            cancel_url: 'http://localhost:3000/cancel',
         })
 
         console.log(session);
