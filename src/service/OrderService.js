@@ -34,7 +34,6 @@ const createOrder = async (cartItems) => {
         return { success: true, message: "Order successfully saved!", data: session };
     }catch(error){
         throw new Error(error);
-        // throw new Error("Failed to save Order.");
     }
 }
 
