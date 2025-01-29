@@ -9,7 +9,7 @@ const createOrder = async (cartItems) => {
                 currency: 'usd',
                 product_data: {
                     name: item.name,
-                    images: [item.imageUrl],
+                    images: [item.imageUrl], 
                 },
                 unit_amount: item.price * 100,
             },
