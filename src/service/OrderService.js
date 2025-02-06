@@ -19,7 +19,7 @@ const createOrder = async (cartItems) => {
                 currency: 'usd',
                 product_data: {
                     name: item.name,
-                    images: [item.imageUrl],
+                    images: [item.imageUrl], 
                 },
                 unit_amount: item.price * 100,
             },
@@ -56,10 +56,8 @@ const createOrder = async (cartItems) => {
 
         return { success: true, message: "Order successfully created!", data: sessionData };
     }catch(error){
-        await session.abortTransaction();
-        session.endSession();
-
-        throw new Error("Failed to create order. Please try again.");
+        throw new Error(error);
+        // throw new Error("Failed to save Order.");
     }
 }
 
